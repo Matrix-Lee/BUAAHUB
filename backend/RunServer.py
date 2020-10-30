@@ -26,7 +26,10 @@ from Cancel_Collect import cancel_collect
 from Returncollection import returncollection
 from Returncomment import returncomment
 from flask_cors import *
-
+from Mycomment import mycomment
+from Mypost import mypost
+from Change import change
+from Myrank import myrank
 app = Flask(__name__)
 CORS(app,  resources=r"/*")   # 允许所有域名跨域
 
@@ -62,6 +65,12 @@ app.add_url_rule(rule='/<SID>/<FID>/comment', view_func = comment,methods=['POST
 #评论
 
 app.add_url_rule(rule='/<SID>/<FID>/lastestcomment', view_func = lastestcomment,methods=['POST', 'GET'])
+#返回最新评论
+
+app.add_url_rule(rule='/<SID>/mypost', view_func = mypost,methods=['POST', 'GET'])
+#评论
+
+app.add_url_rule(rule='/<SID>/mycomment', view_func = mycomment,methods=['POST', 'GET'])
 #返回最新评论
 
 #==================================================================================================================
@@ -100,6 +109,9 @@ app.add_url_rule(rule='/<SID>/returncollection', view_func=returncollection,meth
 
 app.add_url_rule(rule='/<SID>/returncomment', view_func=returncomment,methods=['POST','GET'])
 
+app.add_url_rule(rule='/<SID>/change',view_func=change,methods=['POST','GET'])
+
+app.add_url_rule(rule='/<SID>/myrank',view_func=myrank,methods=['POST','GET'])
 
 def task():
     scheduler = APScheduler()

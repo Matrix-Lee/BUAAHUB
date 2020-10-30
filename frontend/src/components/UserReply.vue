@@ -1,96 +1,23 @@
 <template>
-<div>
-    <div class="tt-wrapper-section">
-        <div class="container">
-            <div class="tt-user-header">
-                <div class="tt-col-avatar">
-                    <div class="tt-icon">
-                       <svg class="tt-icon">
-                          <use xlink:href="#icon-ava-d"></use>
-                        </svg>
-                    </div>
-                </div>
-                <div class="tt-col-title">
-                    <div class="tt-title">
-                        <router-link to="/User">{{username}}</router-link>
-                    </div>
-                    <ul class="tt-list-badge">
-                        <li><a href="#"><span class="tt-color14 tt-badge">{{rank}}</span></a></li>
-                    </ul>
-                </div>
-                <div class="tt-col-btn" id="js-settings-btn">
-                    <div class="tt-list-btn">
-                        <a href="#" class="tt-btn-icon">
-                            <svg class="tt-icon">
-                              <use xlink:href="#icon-settings_fill"></use>
-                            </svg>
-                        </a>
-                        <a href="#" class="btn btn-primary">私信</a>
-                        <a href="#" class="btn btn-secondary">关注</a>
-                    </div>
-                </div>
-            </div>
+  <div class="tab-content">
+    <div class="tab-pane tt-indent-none show active" id="tt-tab-01" role="tabpanel">
+      <div class="tt-topic-list">
+        <div class="tt-list-header">
+          <div class="tt-col-topic">回复内容</div>
+          <div class="tt-col-category hide-mobile">回复主题</div>
+          <div class="tt-col-category hide-mobile">回复时间</div>
         </div>
+        <div class="tt-item" v-for="coll in colls">
+          <div class="tt-col-description" v-text="coll.information"></div>
+          <div class="tt-col-category">
+            <a :href="'/#/topic?fid='+coll.FID">{{coll.title}}</a>
+          </div>
+          <div class="tt-col-category">{{new Date(coll.date*1000).toLocaleString()}}</div>
+        </div>
+      </div>
     </div>
-
- <div class="container">
-    <div class="tt-tab-wrapper">
-         <div class="tt-tab-wrapper">
-            <div class="tt-wrapper-inner">
-                <ul class="nav nav-tabs pt-tabs-default" role="tablist">
-                    <li class="nav-item ">
-                        <a class="nav-link " data-toggle="tab" href="#tt-tab-01" role="tab">
-                            <span><router-link to="/User" class="link">回复 </router-link></span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#tt-tab-02" role="tab">
-                            <span>
-                             <router-link to="/UserTiezi" class="link">帖子 </router-link>
-                            </span>
-                        </a>
-                    </li>
-                    <li class="nav-item show">
-                        <a class="nav-link active" data-toggle="tab" href="#tt-tab-03" role="tab">
-                            <span>
-                            <router-link to="/UserReply" class="link">回复 </router-link>
-                            </span></a>
-                    </li>
-                   
-                    <li class="nav-item tt-hide-md">
-                        <a class="nav-link" data-toggle="tab" href="#tt-tab-05" role="tab"><span><router-link to="/UserCollect" class="link">收藏 </router-link></span></a>
-                    </li>
-                    
-                </ul>
-            </div>
-         </div>
-    
-         <div class="tab-content">
-                <div class="tab-pane tt-indent-none  show active" id="tt-tab-01" role="tabpanel">
-                   <div class="tt-topic-list">
-
-                    <div class="tt-list-header">
-                            <div class="tt-col-topic">帖子</div>
-                            <div class="tt-col-value-large hide-mobile">分类</div>
-                            <div class="tt-col-value-large hide-mobile">状态</div>
-                            <div class="tt-col-value-large hide-mobile">日期</div>
-                    </div>
-
-
-
-
-        
-                   </div>
-                </div>
-         </div>
-
-
-    </div>
- </div>
-
-</div>
+  </div>
 </template>
-
 
 
 
@@ -98,7 +25,10 @@
 import Vue from "vue";
 
 export default {
-  name: 'UserReply',
+  name: "UserReply",
+  data() {
+    return { colls: [] };
+  },
   computed: {
     username: function() {
       if (this.$store.state.isLogin) {
@@ -110,12 +40,30 @@ export default {
         return this.$store.state.user.rank;
       } else return "0";
     }
+  },
+  mounted() {
+    var that = this;
+    let sid = that.$store.state.user.sid;
+    that.axios
+      .get(`/${sid}/mycomment`)
+      .then(function(response) {
+        console.log(response);
+        if (response.data.status == 0) {
+          that.colls = response.data.data;
+        } else {
+          alert("获取主题失败，原因：" + response.data.msg);
+          that.$router.push({ path: "/" });
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+        alert("请求主题时遇到了错误");
+      });
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  @import "../assets/user.css"
-
+@import "../assets/user.css";
 </style>

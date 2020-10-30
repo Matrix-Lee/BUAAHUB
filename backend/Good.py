@@ -28,8 +28,8 @@ def good(SID,FID):
         CNAME = thissession.Cname
         CID_C = dataforum.query(CUSTOMER).filter(CUSTOMER.Cname==CNAME).first().CID
 
-        ans = dataforum.query(CUSTOMER).filter(CUSTOMER.CID==CID_C).all()
-        if ((len(ans)==0)):
+        ansq = dataforum.query(CUSTOMER).filter(CUSTOMER.CID==CID_C).all()
+        if ((len(ansq)==0)):
             dataforum.close()
             return jsonwrap(1, "Pelease check again.", res)
 
@@ -58,7 +58,7 @@ def good(SID,FID):
         a = thisforum.good
         thisforum.good = thisforum.good + 1
         dataforum.commit()
-        ans2.crank = ans2.crank+0.1
+        ans2.crank = ans2.crank+0.5
         dataforum.commit()
         
         res['FID'] = thisforum.FID                  #论贴的ID

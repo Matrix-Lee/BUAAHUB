@@ -78,7 +78,7 @@ def comment(SID,FID):
         newcomment = COMMENT(COID=str(sum),COinf=note,FID=FID,CID=CID_C,date=nowdt)
         dataforum.add(newcomment)
         dataforum.commit()
-        person.crank=person.crank+0.1
+        person.crank=person.crank+0.5
         dataforum.commit()
 
         thisfo = dataforum.query(FORUM).filter(FORUM.FID==FID).first()
@@ -103,7 +103,7 @@ def comment(SID,FID):
         return jsonwrap(0,"success",res)
     except Exception as e:
         error = {}
-        return jsonwrap(10,"error",error)
+        return jsonwrap(10,str(e),error)
     finally:
         dataforum.commit()
         dataforum.close()

@@ -461,7 +461,7 @@ export default {
         .then(function(response) {
           console.log(response);
           if (response.data.status == 0) {
-            alert("发表回复成功！");
+            alert("发表回复成功，等级+0.5！");
             location.reload();
           } else {
             alert("发表回复失败，原因：" + response.data.msg);
@@ -517,9 +517,10 @@ export default {
   },
   mounted() {
     var that = this;
-    if (!that.$route.query.fid) {
-      alert("非法访问");
+    if (!this.$store.state.isLogin) {
+      alert("请登录后访问！");
       that.$router.push({ path: "/" });
+      return;
     } else {
       let sid = that.sid;
       let fid = that.$route.query.fid;

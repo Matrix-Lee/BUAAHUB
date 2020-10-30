@@ -1,3 +1,4 @@
+#显示这个模块里的所有论贴
 from flask import redirect, request, url_for
 from sqlalchemy import String, Column, Integer
 from sqlalchemy import create_engine, func
@@ -5,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Float, func, and_, or_
 from sqlalchemy.orm import sessionmaker
 import random
-from SQLA import  CUSTOMER,FORUM,SESSION,COLLECTION
+from SQLA import  CUSTOMER,FORUM,SESSION,COMMENT,MODULE
 from flask import request
 from JsonWrap import jsonwrap
 import datetime ,time
@@ -18,32 +19,28 @@ Base = declarative_base((engine))
 Session = sessionmaker(engine)
 dataforum = Session()
 
-def return_int(s):
-    Len=len(s)
-    a = 0
-    for i in range(Len):
-        a=a*10+ord(s[i])-ord('0')
-    return a
+def time_change(dtime):
+    un_time = time.mktime(dtime.timetuple())
+    return un_time
 
-def collect(SID,FID):
+def change(SID):
     try:
-        res={}
+        res=[]
         thissession = dataforum.query(SESSION).filter(SESSION.sid==SID).first()
-        if  (thissession==None):
+        if (thissession==None):
             dataforum.close()
             return jsonwrap(2, "Pelease Login again.", res)
         CNAME = thissession.Cname
         CID_C = dataforum.query(CUSTOMER).filter(CUSTOMER.Cname==CNAME).first().CID
-
-        ansq = dataforum.query(CUSTOMER).filter(CUSTOMER.CID==CID_C).all()
-        if ((len(ansq)==0)):
+        
+        ansp = dataforum.query(CUSTOMER).filter(CUSTOMER.CID==CID_C).all()
+        if ((len(ansp)==0)):
             dataforum.close()
             return jsonwrap(1, "Pelease check again.", res)
 
-        
         ans = dataforum.query(CUSTOMER).filter(CUSTOMER.CID==CID_C).first()
         cname = ans.Cname
-        
+
         thisdt = thissession.dt
         nowdt = datetime.datetime.now()
         subdt = (nowdt - thisdt).seconds
@@ -52,31 +49,24 @@ def collect(SID,FID):
             dataforum.commit()
             dataforum.close()
             return jsonwrap(3, "Pelease Login again.", res)
-
         thissession.dt = nowdt
         dataforum.commit()
-        
-        tmptest = dataforum.query(FORUM).filter(FORUM.FID==FID).first()
-        if(tmptest==None):
-            return jsonwrap(4,"该帖子不存在",res)
-        test = dataforum.query(COLLECTION).filter(COLLECTION.Cname ==cname, COLLECTION.FID ==FID).first()
-        if(test!=None):
-            return jsonwrap(5,"The forum has been collected",res)
-        ast = dataforum.query(COLLECTION).filter(COLLECTION.ctid!=0).all()
-        if(len(ast)==0):
-            a=1;
-        else:
-            a = ast[-1].ctid + 1
-        newcollection = COLLECTION(ctid=a,Cname= cname,FID=FID)
-        dataforum.add(newcollection)
+        password1 = request.args.get('ps1')
+        password2 = request.args.get('ps2')
+        if(password1==None or password2== None):
+            return jsonwrap(8,"empty",res)
+        if(password1!=ans.passwd):
+            return jsonwrap(4,"原密码不正确",res)
+        if(password2==ans.passwd):
+            return jsonwrap(5,"修改密码与原密码一致",res)
+        ans.passwd=password2
         dataforum.commit()
-
-        
-        res['Cname'] = cname
-        res['FID'] = FID                  #论贴的ID
         dataforum.close()
-        return jsonwrap(0, "success", res)
+        return jsonwrap(0, "success.", res)
     except Exception as e:
         error = {}
         return jsonwrap(10,str(e),error)
+    finally:
+        dataforum.commit()
+        dataforum.close()
         

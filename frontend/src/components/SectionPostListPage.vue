@@ -65,6 +65,7 @@
       if(!that.$store.state.isLogin){
         alert("请先登录");
         this.$router.push('/Login');
+        return;
       }
       that.axios
         .get(`/${that.$store.state.user.sid}/${that.$route.query.id}/browsemo`)

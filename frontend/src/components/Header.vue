@@ -21,7 +21,7 @@
       </div>
       <div class="newPost">
         <router-link :to="{path: '/createTopic'}">
-          <a href="#" class="tt-btn-create-topic" style="top: auto; bottom: 14px;">
+          <a href="#" class="tt-btn-create-topic" style="top: auto; bottom: 60px; right: 60px">
             <span class="tt-icon">
               <svg>
                 <use xlink:href="#icon-create_new" />

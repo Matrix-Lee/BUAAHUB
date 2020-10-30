@@ -32,8 +32,8 @@ def customerhome(SID):
             return jsonwrap(2, "Pelease Login again.", res)
         CNAME = thissession.Cname
         CID_C = dataforum.query(CUSTOMER).filter(CUSTOMER.Cname==CNAME).first().CID
-        person = dataforum.query(CUSTOMER).filter(CUSTOMER.CID==CID_C).all()
-        if ((len(person)==0)):
+        personq = dataforum.query(CUSTOMER).filter(CUSTOMER.CID==CID_C).all()
+        if ((len(personq)==0)):
             dataforum.close()
             return jsonwrap(1, "Pelease check again.", res)
         person = dataforum.query(CUSTOMER).filter(CUSTOMER.CID==CID_C).first()
@@ -79,13 +79,13 @@ def customerhome(SID):
             temp_res["date"] = time_change(tempfroum.date)              #论贴发布的日期
             temp_res["create_time"] = tempfroum.date                    #论贴创建的时间
             temp_res["views"] = tempfroum.views                         #论贴浏览的次数
-            temp_res['lastestUID'] = help.lastestUID                    #最后一次评论的用户ID
-            temp_res['lastestTime'] = time_change(help.date)            #最后一次评论的时间
+            temp_res['lastestUID'] = tempfroum.lastestUID                    #最后一次评论的用户ID
+            temp_res['lastestTime'] = time_change(tempfroum.date)            #最后一次评论的时间
             temp_res['lastestname'] = person.Cname                      #最后一次评论的人名
             if(temp_people!=None):                                           #判断是否存在评论
-                temp_res['lastestUID'] = help.lastestUID                     #最后一次评论的用户ID
+                temp_res['lastestUID'] = tempfroum.lastestUID                     #最后一次评论的用户ID
                 temp_res['lastestname'] = temp_people.Cname                  #最后一次评论的人名
-                temp_res['lastestTime'] = time_change(help.lastestTime)      #最后一次评论的时间
+                temp_res['lastestTime'] = time_change(tempfroum.lastestTime)      #最后一次评论的时间
             
             post.append(temp_res)
 

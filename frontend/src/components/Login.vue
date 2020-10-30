@@ -23,7 +23,6 @@
                 </div>
             </form>
             <div class="panel-footer">
-                <div class="panel-footer-info1"><a href="#" class="link" >忘记密码?</a></div>
               <div class="panel-footer-info2"><router-link to="/Register" class="link">注册 </router-link></div>
             </div>
             

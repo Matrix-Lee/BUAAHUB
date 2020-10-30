@@ -309,7 +309,7 @@ export default {
         )
         .then(function(response) {
           if (response.data.status == 0) {
-            alert("发表帖子成功！");
+            alert("发表帖子成功，等级+0.5！");
             let fid = response.data.data.FID;
             that.$router.push(`/topic?fid=${fid}`);
           } else {

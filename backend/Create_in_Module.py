@@ -37,6 +37,9 @@ def create_in_module(SID,MOID):
             return jsonwrap(3, "Pelease Login again.", res)
         CNAME = thissession.Cname
         CID_C = dataforum.query(CUSTOMER).filter(CUSTOMER.Cname==CNAME).first().CID
+        if(return_int(CID_C)!=0 and return_int(MOID)==5):
+            dataforum.close()
+            return jsonwrap(9, "You are not Admin.", res)
         ans = dataforum.query(CUSTOMER).filter(CUSTOMER.CID==CID_C).first()
         if (ans==None):
             dataforum.close()
@@ -93,7 +96,7 @@ def create_in_module(SID,MOID):
         newone = FORUM(FID=str(Forum_cid), Finf=note ,  good = 0, CID = CID_C, Frank = rank, MOID = MOID, title=title , cnumber = 0, date = nowdt, views = 0,lastestUID = CID_C,lastestTime = nowdt)
         dataforum.add(newone)
         dataforum.commit()
-        ans.crank=ans.crank+0.1
+        ans.crank=ans.crank+0.5
         dataforum.commit()
 
         res['FID'] = Forum_cid                  #论贴的ID

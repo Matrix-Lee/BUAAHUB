@@ -57,11 +57,7 @@ def returncollection(SID):
         allforum = dataforum.query(COLLECTION).filter(COLLECTION.Cname==CNAME).all()
         Len = len(allforum)
 
-        if Len==0:
-            dataforum.close()
-            return jsonwrap(4, "nothing.", answer)
-
-        for i in range(Len):
+        for i in range(0,Len):
             tempcus = allforum[i]
             tempfroum = dataforum.query(FORUM).filter(FORUM.FID==tempcus.FID).first()
             mod = dataforum.query(MODULE).filter(MODULE.MOID==tempfroum.MOID).first()

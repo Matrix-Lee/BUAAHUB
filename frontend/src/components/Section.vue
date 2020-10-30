@@ -111,11 +111,6 @@ export default {
   },
   mounted() {
     var that = this;
-    if (!that.$store.state.isLogin) {
-      alert("请先登录");
-      that.$router.push('/Login');
-    }
-
     for(let i = 0; i < 5; i++){
       that.axios
         .get(`/${i + 1}/forum_show`)

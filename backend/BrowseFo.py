@@ -33,8 +33,8 @@ def browsefo(SID,FID):
             return jsonwrap(2, "Pelease Login again.", res)
         CNAME = thissession.Cname
         CID_C = dataforum.query(CUSTOMER).filter(CUSTOMER.Cname==CNAME).first().CID
-        ans = dataforum.query(CUSTOMER).filter(CUSTOMER.CID==CID_C).all()
-        if ((len(ans)==0)):
+        ansq = dataforum.query(CUSTOMER).filter(CUSTOMER.CID==CID_C).all()
+        if ((len(ansq)==0)):
             dataforum.close()
             return jsonwrap(1, "Pelease check again.", res)
 
